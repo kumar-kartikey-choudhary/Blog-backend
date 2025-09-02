@@ -5,9 +5,12 @@ import blog.backend.main.post.model.Post;
 import blog.backend.main.post.repository.PostRepository;
 import blog.backend.main.post.service.PostService;
 import blog.backend.main.post.utils.PostUtility;
+import blog.backend.main.user.controller.UserController;
+import blog.backend.main.user.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,12 +23,14 @@ import static blog.backend.main.post.utils.PostUtility.*;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+    private final UserController userController;
 
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository)
+    public PostServiceImpl(PostRepository postRepository , UserController userController)
     {
         this.postRepository = postRepository;
+        this.userController = userController;
     }
 
 
@@ -34,14 +39,20 @@ public class PostServiceImpl implements PostService {
         log.info("Inside @class PostServiceImpl @method create Param postDto : {}", postDTO);
         try {
             Objects.requireNonNull(postDTO, "Post Object can not be null or empty");
-            if(StringUtils.isBlank(postDTO.getId()))
+            if(StringUtils.isNotBlank(postDTO.getId()))
             {
-                this.update(postDTO.getId());
+                this.update(postDTO.getId(),postDTO);
             }
             Post post = dtoToPost(postDTO);
             post = this.postRepository.saveAndFlush(post);
             log.info("Inside @Class PostServiceImpl @Method create @Param post: {}", post);
-            return postToDto(post);
+            PostDTO postDTO1 = postToDto(post);
+            ResponseEntity<UserDTO> userDTOResponse = userController.findByUsername(post.getAuthor());
+            if(userDTOResponse != null)
+            {
+                postDTO1.setAuthor(userDTOResponse.getBody());
+            }
+            return postDTO1;
         }catch (Exception ex) {
             log.error("Error Inside @Class PostServiceImpl @Method create errorMsg: {}, exceptionStackTrace: {}", ex.getMessage(), ex.getStackTrace());
             throw new IllegalCallerException("Something went wrong");
@@ -51,16 +62,56 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDTO> getAllPosts() {
         log.info("Inside @class PostServiceImpl @method getAllPosts :");
-        return this.postRepository.findAll().stream().map(PostUtility::postToDto).toList();
+        List<Post> all = this.postRepository.findAll();
+        return all.stream().map(post -> {
+            
+            // convert entity to DTO
+            PostDTO postDTO = postToDto(post);
+
+            try {
+                ResponseEntity<UserDTO> userResponse = userController.findByUsername(post.getAuthor());
+                if (userResponse != null && userResponse.getStatusCode().is2xxSuccessful()) {
+                    postDTO.setAuthor(userResponse.getBody());
+                }
+            } catch (Exception ex) {
+                log.error("Failed to fetch author for postId: {} author: {}", post.getId(), post.getAuthor(), ex);
+            }
+            return postDTO;
+        }).toList();
     }
 
     @Override
     public PostDTO getById(String id) {
-        return null;
+        log.info("Inside @class PostServiceImpl @method getById param : {}", id);
+        try {
+            if(StringUtils.isBlank(id))
+            {
+                throw new IllegalAccessException("Id must not be null");
+            }
+            Post post = this.postRepository.findById(id).orElse(null);
+            PostDTO postDTO = postToDto(post);
+            try {
+                assert post != null;
+                ResponseEntity<UserDTO> userResponse = userController.findByUsername(post.getAuthor());
+                if (userResponse != null && userResponse.getStatusCode().is2xxSuccessful()) {
+                    postDTO.setAuthor(userResponse.getBody());
+                }
+            } catch (Exception ex) {
+                log.error("Failed to fetch author for postId: {} author: {}", post.getId(), post.getAuthor(), ex);
+            }
+            return postDTO;
+        }catch (Exception ex) {
+            log.error("Error Inside @Class PostServiceImpl @Method getById errorMsg: {}, exceptionStackTrace: {}", ex.getMessage(), ex.getStackTrace());
+            throw new IllegalCallerException("Something went wrong");
+        }
     }
 
     @Override
-    public PostDTO update(String id) {
+    public PostDTO update(String id, PostDTO postDTO) {
+        log.info("Inside @class PostServiceImpl @method update Param id:{} , postDto :{}", id , postDTO);
+
+
+
         return null;
     }
 

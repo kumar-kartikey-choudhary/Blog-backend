@@ -37,8 +37,8 @@ public class PostControllerImpl implements PostController {
     }
 
     @Override
-    public ResponseEntity<PostDTO> update(String id) {
-        return ResponseEntity.ok(this.postService.update(id));
+    public ResponseEntity<PostDTO> update(String id, PostDTO postDTO) {
+        return ResponseEntity.ok(this.postService.update(id, postDTO));
     }
 
     @Override

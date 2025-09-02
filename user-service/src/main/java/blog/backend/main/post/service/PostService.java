@@ -13,7 +13,7 @@ public interface PostService {
 
     PostDTO getById(String id);
 
-    PostDTO update(String id);
+    PostDTO update(String id, PostDTO postDTO);
 
     void delete(String id);
 }

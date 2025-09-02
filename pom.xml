@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>blog.backend.parent</groupId>
 		<artifactId>blog-backend-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -14,7 +14,7 @@
 
 	<groupId>blog.backend.main</groupId>
 	<artifactId>blog-backend-main</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>blog-backend-main</name>
 	<description>this project is blog backend main</description>
@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>blog.backend.parent</groupId>
 			<artifactId>blog-backend-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

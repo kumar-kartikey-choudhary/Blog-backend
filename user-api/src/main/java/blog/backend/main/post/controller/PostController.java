@@ -21,7 +21,7 @@ public interface PostController {
     ResponseEntity<PostDTO> getById(@PathVariable(name = "id") String id);
 
     @PutMapping(path = "/{id}")
-    ResponseEntity<PostDTO> update(@PathVariable(name = "id") String id);
+    ResponseEntity<PostDTO> update(@PathVariable(name = "id") String id, @RequestBody PostDTO postDTO);
 
     @DeleteMapping(path = "/{id}")
     void delete(@PathVariable(name = "id") String id);
