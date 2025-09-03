@@ -4,7 +4,6 @@ import blog.backend.main.post.dto.PostDTO;
 import blog.backend.main.post.model.Post;
 import blog.backend.main.post.repository.PostRepository;
 import blog.backend.main.post.service.PostService;
-import blog.backend.main.post.utils.PostUtility;
 import blog.backend.main.user.controller.UserController;
 import blog.backend.main.user.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -109,14 +108,45 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDTO update(String id, PostDTO postDTO) {
         log.info("Inside @class PostServiceImpl @method update Param id:{} , postDto :{}", id , postDTO);
+        try {
+            Objects.requireNonNull(postDTO, "Post object must not be null or empty");
+            if(StringUtils.isBlank(id))
+            {
+                throw new IllegalAccessException("Post id must not be null");
+            }
+            Post post = this.postRepository.findById(id).orElse(null);
+            if(post == null)
+            {
+                throw new IllegalCallerException("POST_NOT_FOUND");
+            }
+            post.setContent(postDTO.getContent());
+            post.setTitle(postDTO.getTitle());
 
-
-
-        return null;
+            post = this.postRepository.saveAndFlush(post);
+            return postToDto(post);
+        }catch (Exception ex) {
+            log.error("Error Inside @Class PostServiceImpl @Method update errorMsg: {}, exceptionStackTrace: {}", ex.getMessage(), ex.getStackTrace());
+            throw new IllegalCallerException("Something went wrong");
+        }
     }
 
     @Override
     public void delete(String id) {
-
+        log.info("Inside @class PostServiceImpl @method delete Param id:{}",id);
+        try {
+            if(StringUtils.isBlank(id))
+            {
+                throw new IllegalAccessException("Post id must not be null");
+            }
+            Post post = this.postRepository.findById(id).orElse(null);
+            if(post == null)
+            {
+                throw new IllegalCallerException("POST_NOT_FOUND");
+            }
+            this.postRepository.delete(post);
+        } catch (Exception ex) {
+            log.error("Error Inside @Class PostServiceImpl @Method delete errorMsg: {}, exceptionStackTrace: {}", ex.getMessage(), ex.getStackTrace());
+            throw new IllegalCallerException("Something went wrong");
+        }
     }
 }
