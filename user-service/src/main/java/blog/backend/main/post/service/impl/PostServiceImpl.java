@@ -1,5 +1,7 @@
 package blog.backend.main.post.service.impl;
 
+import blog.backend.main.comment.controller.CommentController;
+import blog.backend.main.comment.dto.CommentDto;
 import blog.backend.main.post.dto.PostDTO;
 import blog.backend.main.post.model.Post;
 import blog.backend.main.post.repository.PostRepository;
@@ -23,13 +25,15 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserController userController;
+    private final CommentController controller;
 
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository , UserController userController)
+    public PostServiceImpl(PostRepository postRepository , UserController userController, CommentController controller)
     {
         this.postRepository = postRepository;
         this.userController = userController;
+        this.controller = controller;
     }
 
 

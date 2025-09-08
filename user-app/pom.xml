@@ -38,7 +38,7 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                    <mainClass>blog.backend.main.BlogBackendMainApplication.java</mainClass>
+                    <mainClass>blog_backend_main.BlogBackendMainApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
