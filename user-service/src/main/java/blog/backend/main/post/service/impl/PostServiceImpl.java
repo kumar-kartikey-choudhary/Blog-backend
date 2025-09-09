@@ -1,7 +1,6 @@
 package blog.backend.main.post.service.impl;
 
 import blog.backend.main.comment.controller.CommentController;
-import blog.backend.main.comment.dto.CommentDto;
 import blog.backend.main.post.dto.PostDTO;
 import blog.backend.main.post.model.Post;
 import blog.backend.main.post.repository.PostRepository;
