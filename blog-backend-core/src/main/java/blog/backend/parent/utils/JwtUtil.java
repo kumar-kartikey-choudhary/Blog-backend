@@ -1,6 +1,5 @@
 package blog.backend.parent.utils;
 
-import blog.backend.main.user.model.User;
 import blog.backend.parent.constants.SecurityConstant;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -1,6 +1,5 @@
 package blog.backend.parent.service.impl;
 
-import blog.backend.main.user.repository.UserRepository;
 import blog.backend.parent.model.JwtRequest;
 import blog.backend.parent.model.JwtResponse;
 import blog.backend.parent.service.AuthService;
@@ -10,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CachingUserDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
