@@ -11,19 +11,19 @@ import java.util.List;
 @FeignClient(name = "posts" , url = "${post.url}" , primary = false, path = "/posts")
 public interface PostController {
 
-    @PostMapping
+    @PostMapping(path = "create")
     ResponseEntity<PostDTO> create(@RequestBody PostDTO postDTO);
 
-    @GetMapping
+    @GetMapping(path = "all")
     ResponseEntity<List<PostDTO>> getAllPosts();
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "findById/{id}")
     ResponseEntity<PostDTO> getById(@PathVariable(name = "id") String id);
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "update/{id}")
     ResponseEntity<PostDTO> update(@PathVariable(name = "id") String id, @RequestBody PostDTO postDTO);
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "delete/{id}")
     void delete(@PathVariable(name = "id") String id);
 
 }

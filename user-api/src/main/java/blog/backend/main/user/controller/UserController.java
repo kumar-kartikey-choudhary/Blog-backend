@@ -15,7 +15,7 @@ public interface UserController {
     @GetMapping(path = "find/{uuid}")
     ResponseEntity<UserDTO> find(@PathVariable(name = "uuid") String uuid);
 
-    @GetMapping(path = "find/{username}")
+    @GetMapping(path = "findByUsername/{username}")
     ResponseEntity<UserDTO> findByUsername(@PathVariable(name = "username") String username);
 
 }

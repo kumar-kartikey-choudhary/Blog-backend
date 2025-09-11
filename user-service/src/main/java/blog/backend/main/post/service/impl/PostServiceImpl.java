@@ -1,6 +1,7 @@
 package blog.backend.main.post.service.impl;
 
 import blog.backend.main.comment.controller.CommentController;
+import blog.backend.main.comment.dto.CommentDto;
 import blog.backend.main.post.dto.PostDTO;
 import blog.backend.main.post.model.Post;
 import blog.backend.main.post.repository.PostRepository;
@@ -75,6 +76,8 @@ public class PostServiceImpl implements PostService {
                 if (userResponse != null && userResponse.getStatusCode().is2xxSuccessful()) {
                     postDTO.setAuthor(userResponse.getBody());
                 }
+                ResponseEntity<List<CommentDto>> commentResponse = controller.findByPostId(post.getId());
+                postDTO.setComments(commentResponse.getBody());
             } catch (Exception ex) {
                 log.error("Failed to fetch author for postId: {} author: {}", post.getId(), post.getAuthor(), ex);
             }
@@ -90,13 +93,19 @@ public class PostServiceImpl implements PostService {
             {
                 throw new IllegalAccessException("Id must not be null");
             }
-            Post post = this.postRepository.findById(id).orElse(null);
+            Post post = this.postRepository.findById(id).orElseThrow(()->new IllegalCallerException("POST_NOT_FOUND"));
             PostDTO postDTO = postToDto(post);
             try {
                 assert post != null;
                 ResponseEntity<UserDTO> userResponse = userController.findByUsername(post.getAuthor());
                 if (userResponse != null && userResponse.getStatusCode().is2xxSuccessful()) {
                     postDTO.setAuthor(userResponse.getBody());
+                }
+                ResponseEntity<List<CommentDto>> commentResponse = controller.findByPostId(id);
+                if (commentResponse != null && commentResponse.getStatusCode().is2xxSuccessful()) {
+                    postDTO.setComments(commentResponse.getBody());
+                } else {
+                    postDTO.setComments(List.of()); // empty list instead of null
                 }
             } catch (Exception ex) {
                 log.error("Failed to fetch author for postId: {} author: {}", post.getId(), post.getAuthor(), ex);

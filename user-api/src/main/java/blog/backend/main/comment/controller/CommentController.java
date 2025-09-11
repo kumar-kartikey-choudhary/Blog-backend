@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @ResponseBody
-@FeignClient(name = "comments",url = "{comment.url}", path = "/comments")
+@FeignClient(name = "comments",url = "${comment.url}", path = "/comments")
 public interface CommentController {
 
     @PostMapping(path = "create")
@@ -18,10 +18,10 @@ public interface CommentController {
     @GetMapping(path = "find/{uuid}")
     ResponseEntity<CommentDto> find(@PathVariable(name = "uuid") String uuid);
 
-    @GetMapping(path = "find/{postId}")
+    @GetMapping(path = "findByPostId/{postId}")
     ResponseEntity<List<CommentDto>> findByPostId(@PathVariable(name = "postId") String postId);
 
-    @DeleteMapping(path = "delete")
+    @DeleteMapping(path = "delete/{uuid}")
     void delete(@PathVariable(name = "uuid")  String uuid);
 
 }
